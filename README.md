@@ -147,3 +147,36 @@ Evidencias:
 - Configuración sensible por `.env` con fallback seguro
 - TypeScript estricto y tipado de `CustomWorld`
 - Hooks de Cucumber para ciclo de vida y evidencias
+
+## Cómo Probar las Consultas SQL
+
+### Motor elegido
+
+Las consultas y scripts están implementados en PostgreSQL 15, en:
+
+- `dataBase/schema.sql`
+- `dataBase/seed.sql`
+- `dataBase/queries.sql`
+
+> Nota: si usas el comando de Docker de abajo, la base de datos `qa_db` se crea automáticamente mediante `POSTGRES_DB`.
+
+### Levantar PostgreSQL 15 con Docker (rápido)
+
+```bash
+docker run --name pg15-qa -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=qa_db -p 5432:5432 -d postgres:15
+```
+
+### Cargar esquema y datos
+
+```bash
+psql -h localhost -U postgres -d qa_db -f dataBase/schema.sql
+psql -h localhost -U postgres -d qa_db -f dataBase/seed.sql
+```
+
+### Ejecutar queries
+
+```bash
+psql -h localhost -U postgres -d qa_db -f dataBase/queries.sql
+```
+
+Si prefieres GUI, usa DBeaver/DataGrip/pgAdmin conectando a `localhost:5432`, DB `qa_db`, user `postgres`, pass `postgres`.
