@@ -1,0 +1,36 @@
+{
+  "name": "technical-test-gtf--automation-qa",
+  "version": "1.0.0",
+  "description": "Technical QA automation test using Playwright + Cucumber + TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf reports",
+    "pretest": "npm run clean",
+    "test": "cucumber-js",
+    "test:smoke": "cucumber-js --tags \"@smoke\"",
+    "test:regression": "cucumber-js --tags \"@regression\"",
+    "report:generate": "tsx src/utils/generateReport.ts",
+    "test:report": "npm run test && npm run report:generate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andresreyes22/Technical-Test-GTF--Automation-QA.git"
+  },
+  "keywords": [],
+  "author": "Andres Reyes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andresreyes22/Technical-Test-GTF--Automation-QA/issues"
+  },
+  "homepage": "https://github.com/andresreyes22/Technical-Test-GTF--Automation-QA#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.7.0",
+    "@types/node": "^25.5.0",
+    "multiple-cucumber-html-reporter": "^3.10.0",
+    "playwright": "^1.58.2",
+    "rimraf": "^6.1.3",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}

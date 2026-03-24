@@ -1,0 +1,33 @@
+node_modules/
+dist/
+reports/
+!.gitkeep
+*.log
+.DS_Store
+
+# Test artifacts / evidencias
+playwright-report/
+test-results/
+coverage/
+screenshots/
+videos/
+traces/
+*.webm
+*.png
+*.trace
+
+# Cucumber / report outputs
+*.html
+*.json
+
+# Caches and temp files
+.cache/
+.tmp/
+tmp/
+temp/
+*.tmp
+*.swp
+
+# OS / IDE noise
+.idea/
+.vscode/
