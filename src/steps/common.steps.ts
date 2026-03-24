@@ -28,3 +28,48 @@ Then(
     assert.strictEqual(currentMessage, expectedMessage);
   }
 );
+
+When(
+  "agrego el producto {string} al carrito",
+  async function (this: CustomWorld, productName: string): Promise<void> {
+    await this.inventoryPage.addProductToCartByName(productName);
+  }
+);
+
+Then("el carrito debe mostrar {int} producto", async function (this: CustomWorld, count: number): Promise<void> {
+  const currentCount = await this.inventoryPage.getCartBadgeCount();
+  assert.strictEqual(currentCount, count);
+});
+
+When("abro el carrito", async function (this: CustomWorld): Promise<void> {
+  await this.inventoryPage.openCart();
+});
+
+Then(
+  "debo ver el producto {string} en el carrito",
+  async function (this: CustomWorld, productName: string): Promise<void> {
+    await this.cartPage.assertProductInCart(productName);
+  }
+);
+
+When(
+  "completo el checkout con nombre {string}, apellido {string} y código postal {string}",
+  async function (
+    this: CustomWorld,
+    firstName: string,
+    lastName: string,
+    postalCode: string
+  ): Promise<void> {
+    await this.cartPage.continueToCheckout();
+    await this.checkoutPage.completeCustomerInformation(firstName, lastName, postalCode);
+    await this.checkoutOverviewPage.finishCheckout();
+  }
+);
+
+Then(
+  "debo ver la confirmación {string}",
+  async function (this: CustomWorld, expectedConfirmation: string): Promise<void> {
+    const currentConfirmation = await this.checkoutCompletePage.getConfirmationMessage();
+    assert.strictEqual(currentConfirmation, expectedConfirmation);
+  }
+);

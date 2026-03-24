@@ -9,6 +9,12 @@ Feature: Flujo completo de compra en SauceDemo
     Given que ingreso al login de SauceDemo
     When inicio sesión con el usuario "standard_user"
     Then debería ver el inventario de productos
+    When agrego el producto "Sauce Labs Backpack" al carrito
+    Then el carrito debe mostrar 1 producto
+    When abro el carrito
+    Then debo ver el producto "Sauce Labs Backpack" en el carrito
+    When completo el checkout con nombre "Andres", apellido "Reyes" y código postal "110111"
+    Then debo ver la confirmación "Thank you for your order!"
 
   @negative @regression
   Scenario: Login Fallido
