@@ -1,23 +1,25 @@
 name: Qodana
-
 on:
-  pull_request:
-  push:
-    branches:
-      - main
-
+push:
+branches:
+- main
+pull_request:
 jobs:
-  qodana:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+qodana:
+runs-on: ubuntu-latest
+```
+permissions:
+  contents: read
 
-      - name: Qodana Scan
-        uses: JetBrains/qodana-action@v2025.1
-        with:
-          upload-result: true
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+    with:
+      fetch-depth: 0
+
+  - name: Run Qodana Community Scan
+    uses: JetBrains/qodana-action@v2025.1
+    with:
+      community: true
+      upload-result: true
+```
