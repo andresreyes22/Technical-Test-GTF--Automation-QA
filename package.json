@@ -6,10 +6,17 @@
   "scripts": {
     "clean": "rimraf reports",
     "pretest": "npm run clean",
-    "test": "cucumber-js",
-    "test:smoke": "cucumber-js --tags \"@smoke\"",
-    "test:negative": "cucumber-js --tags \"@negative\"",
-    "test:regression": "cucumber-js --tags \"@regression\"",
+    "test": "cucumber-js \"features/**/*.feature\"",
+    "test:auth": "cucumber-js --tags \"@auth\" \"features/**/*.feature\"",
+    "test:cart": "cucumber-js --tags \"@cart\" \"features/**/*.feature\"",
+    "test:checkout": "cucumber-js --tags \"@checkout\" \"features/**/*.feature\"",
+    "test:e2e": "cucumber-js --tags \"@e2e\" \"features/**/*.feature\"",
+    "test:smoke": "cucumber-js --tags \"@smoke\" \"features/**/*.feature\"",
+    "test:negative": "cucumber-js --tags \"@negative\" \"features/**/*.feature\"",
+    "test:regression": "cucumber-js --tags \"@regression\" \"features/**/*.feature\"",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "lint:qodana": "docker run --rm -it -v $(pwd):/data/project -v $(pwd)/.qodana:/data/results jetbrains/qodana-js:2025.1",
     "report:generate": "tsx src/utils/generateReport.ts",
     "test:report": "npm run test && npm run report:generate"
   },
@@ -26,12 +33,16 @@
   "homepage": "https://github.com/andresreyes22/Technical-Test-GTF--Automation-QA#readme",
   "devDependencies": {
     "@cucumber/cucumber": "^12.7.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
     "@types/node": "^25.5.0",
+    "dotenv": "^17.2.3",
+    "eslint": "^9.38.0",
     "multiple-cucumber-html-reporter": "^3.10.0",
     "playwright": "^1.58.2",
     "rimraf": "^6.1.3",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.2"
+    "typescript": "^5.9.3"
   }
 }

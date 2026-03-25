@@ -1,14 +1,14 @@
 import {
   After,
   Before,
-  ITestCaseHookParameter,
   Status,
   setDefaultTimeout
 } from "@cucumber/cucumber";
+import type { ITestCaseHookParameter } from "@cucumber/cucumber";
 import fs from "node:fs";
 import path from "node:path";
 import { testConfig } from "../config/testConfig";
-import { CustomWorld } from "../types/customWorld";
+import type { CustomWorld } from "../types/customWorld";
 import { sanitizeFileName } from "../utils/sanitizeFileName";
 
 setDefaultTimeout(testConfig.timeouts.stepTimeoutMs);

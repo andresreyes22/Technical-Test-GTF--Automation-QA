@@ -31,3 +31,5 @@ temp/
 # OS / IDE noise
 .idea/
 .vscode/
+.env
+.qodana/

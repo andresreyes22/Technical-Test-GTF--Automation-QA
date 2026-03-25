@@ -1,5 +1,7 @@
-import { IWorldOptions, setWorldConstructor, World } from "@cucumber/cucumber";
-import { Browser, BrowserContext, Page, chromium } from "playwright";
+import { setWorldConstructor, World } from "@cucumber/cucumber";
+import type { IWorldOptions } from "@cucumber/cucumber";
+import { chromium } from "playwright";
+import type { Browser, BrowserContext, Page } from "playwright";
 import { LoginPage } from "../pages/LoginPage";
 import { InventoryPage } from "../pages/InventoryPage";
 import { CartPage } from "../pages/CartPage";
@@ -12,6 +14,7 @@ export class CustomWorld extends World {
   public browser!: Browser;
   public context!: BrowserContext;
   public page!: Page;
+  public lastAddedProductName?: string;
 
   public loginPage!: LoginPage;
   public inventoryPage!: InventoryPage;

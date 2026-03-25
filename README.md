@@ -1,17 +1,57 @@
 # Technical Test - Automation QA
 
-Automatización E2E de SauceDemo implementada con **Playwright + Cucumber + TypeScript estricto**, usando patrón **Page Object Model (POM)** y enfoque orientado a objetos.
+[![Node.js](https://img.shields.io/badge/Node.js-20+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
+[![Cucumber](https://img.shields.io/badge/Cucumber-BDD-23D96C?logo=cucumber&logoColor=white)](https://cucumber.io/)
+[![ESLint](https://img.shields.io/badge/ESLint-Static%20Analysis-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
+[![Qodana](https://img.shields.io/badge/Qodana-Code%20Quality-000000?logo=jetbrains&logoColor=white)](https://www.jetbrains.com/qodana/)
+
+Automatización E2E de SauceDemo con **Playwright + Cucumber + TypeScript** usando **Page Object Model (POM)**, enfoque BDD y organización por dominios.
 
 Sitio objetivo: [SauceDemo](https://www.saucedemo.com/)
 
 ## Stack técnico
 
-- Node.js + TypeScript (strict)
+- Node.js + TypeScript (modo estricto)
 - Cucumber (Gherkin)
-- Playwright (browser automation + video)
+- Playwright (automatización UI + evidencias)
+- ESLint (análisis estático de código)
+- Qodana (análisis estático para CI/CD)
 - Reportería HTML (Cucumber JSON + reporte consolidado)
 
-## Instalación paso a paso
+## Estructura del proyecto
+
+- `features/auth/`: escenarios de autenticación
+- `features/cart/`: escenarios de carrito
+- `features/checkout/`: escenarios de checkout
+- `features/e2e/`: flujos end-to-end
+- `src/pages/`: Page Objects
+- `src/steps/`: Step Definitions
+- `src/hooks/`: Hooks de Cucumber
+- `src/types/`: `CustomWorld` y tipados de ejecución
+- `src/config/`: configuración centralizada (`dotenv`)
+- `src/utils/`: utilidades de reportería y soporte
+- `.github/workflows/qodana.yml`: ejecución de Qodana en CI
+- `qodana.yaml`: configuración de Qodana
+- `eslint.config.mjs`: configuración de ESLint
+
+## Variables de entorno
+
+Este proyecto usa variables de entorno para evitar hardcodear datos sensibles o configurables.
+
+1. Crear archivo local:
+   - `cp .env.example .env`
+2. Editar valores según tu entorno.
+
+Variables disponibles:
+
+- `BASE_URL`: URL base de la aplicación
+- `SAUCE_PASSWORD`: contraseña por defecto para usuarios de prueba
+- `STEP_TIMEOUT_MS`: timeout general de steps y hooks
+- `NAVIGATION_TIMEOUT_MS`: timeout de navegación Playwright
+
+## Instalación
 
 1. Clonar el repositorio:
    - `git clone <URL_DEL_REPO>`
@@ -20,63 +60,90 @@ Sitio objetivo: [SauceDemo](https://www.saucedemo.com/)
    - `npm install`
 3. Instalar navegador para Playwright:
    - `npx playwright install chromium`
+4. Configurar entorno:
+   - `cp .env.example .env`
 
 ## Ejecución de pruebas
 
-- Ejecutar todos los escenarios:
-  - `npm run test`
-- Ejecutar solo smoke:
-  - `npm run test:smoke`
-- Ejecutar regression:
-  - `npm run test:regression`
-- Ejecutar negativo:
-  - `npm run test:negative`
-- Ejecutar pruebas y generar reporte consolidado:
-  - `npm run test:report`
+Generales:
 
-## Reporte HTML
+- `npm run test`: ejecuta toda la suite
+- `npm run test:report`: ejecuta pruebas y genera reporte consolidado
 
-Después de ejecutar `npm run test:report`, abrir:
+Por dominio/tag:
 
-- `reports/html/index.html`
+- `npm run test:auth`: escenarios `@auth`
+- `npm run test:cart`: escenarios `@cart`
+- `npm run test:checkout`: escenarios `@checkout`
+- `npm run test:e2e`: escenarios `@e2e`
+- `npm run test:smoke`: escenarios `@smoke`
+- `npm run test:negative`: escenarios `@negative`
+- `npm run test:regression`: escenarios `@regression`
 
-También se genera un HTML básico de Cucumber en:
+## Calidad de código (análisis estático)
 
-- `reports/html/cucumber-report.html`
+ESLint:
 
-## Evidencias
+- `npm run lint`: valida reglas de calidad y TypeScript
+- `npm run lint:fix`: corrige automáticamente lo posible
 
-- Videos por scenario: `reports/videos/` (formato `.webm`)
-- Screenshots automáticos solo en fallo: `reports/screenshots/`
+Qodana:
 
-> Nota: Las evidencias se generan localmente y no se versionan en Git.
+- `npm run lint:qodana`: corre análisis Qodana local (requiere Docker)
+- CI: se ejecuta en PR/push a `main` vía `.github/workflows/qodana.yml`
 
-## Escenarios implementados
+## Reportes y evidencias
 
-- `@smoke @critical` Happy Path:
-  - Login válido
-  - Agregar 1 producto al carrito
-  - Checkout hasta confirmación
-- `@negative @regression` Login fallido:
-  - Usuario bloqueado y validación de mensaje de error
-- `@regression` Data Driven:
-  - Scenario Outline con `standard_user`, `problem_user`, `performance_glitch_user`
+Después de `npm run test:report`:
 
-## Estructura del proyecto
+- Reporte consolidado: `reports/html/index.html`
+- Reporte Cucumber: `reports/html/cucumber-report.html`
+- JSON Cucumber: `reports/json/cucumber-report.json`
 
-- `features/`: escenarios Gherkin
-- `src/pages/`: Page Objects (POM)
-- `src/steps/`: Step definitions tipados
-- `src/hooks/`: hooks de Cucumber (timeouts, screenshots, ciclo de browser)
-- `src/types/`: World personalizado
-- `src/utils/`: utilidades (sanitización y generación de reportes)
-- `src/config/`: configuración centralizada
-- `dataBase/`: queries y scripts SQL (PostgreSQL 15)
+Evidencias:
 
-## Buenas prácticas aplicadas
+- Videos por escenario: `reports/videos/`
+- Screenshots en fallo: `reports/screenshots/`
 
-- Timeouts globales vía `setDefaultTimeout()` y `setDefaultNavigationTimeout()`
-- Selectores robustos (`data-test`, `id`)
-- Validación explícita de redirección `"/"` -> `"/inventory.html"`
-- TypeScript estricto
-- Diseño orientado a objetos con separación por responsabilidades
+### Evidencia de ejecución (`.webm`)
+
+- Durante la ejecución se generan videos `.webm` en `reports/videos/`.
+- Los videos son evidencia técnica del flujo ejecutado (útil para auditoría y debugging).
+- **No se suben al repositorio**: están excluidos por `.gitignore`.
+- En evaluaciones o revisiones, basta con indicar en este README su ubicación local.
+
+## Enfoque profesional: impacto, decisiones técnicas y arquitectura
+
+### Impacto en calidad y mantenibilidad
+
+- Organización por dominios (`auth`, `cart`, `checkout`, `e2e`) para escalar cobertura sin volver monolítico el feature set.
+- Escenarios declarativos para reducir fragilidad ante cambios de UI.
+- Menor riesgo de regresión con suites por tags (`smoke`, `negative`, `regression`) y ejecución selectiva.
+- Evidencias automáticas (video y screenshot) para acelerar análisis de fallas.
+
+### Decisiones técnicas (y por qué)
+
+- **Playwright + Cucumber + TypeScript**: equilibrio entre velocidad E2E, legibilidad BDD y seguridad de tipos.
+- **Page Object Model**: centraliza selectores/acciones y evita duplicación en steps.
+- **DataTable en checkout**: hace el escenario más expresivo y facilita variaciones de datos.
+- **`.env` con `dotenv`**: elimina hardcodeo de datos sensibles y permite configuraciones por entorno.
+- **ESLint + Qodana**: doble capa de análisis estático (local + CI) para elevar el estándar de calidad.
+
+### Justificación de arquitectura
+
+- Separación por capas:
+  - `features/`: intención de negocio.
+  - `steps/`: traducción de negocio a acciones verificables.
+  - `pages/`: interacción técnica con UI.
+  - `hooks/` y `config/`: concerns transversales (ciclo de vida, timeouts, evidencias).
+- Esta estructura mantiene bajo acoplamiento, alta cohesión y facilita evolución del framework (nuevas features, nuevos tags, integración CI).
+- El diseño prioriza trazabilidad end-to-end: cada escenario tiene pasos legibles y evidencia ejecutable.
+
+## Prácticas implementadas
+
+- Gherkin organizado por dominios de negocio
+- Escenarios más declarativos para menor acoplamiento a UI
+- DataTable para datos de checkout en BDD
+- Configuración sensible por `.env` con fallback seguro
+- TypeScript estricto y tipado de `CustomWorld`
+- Hooks de Cucumber para ciclo de vida y evidencias

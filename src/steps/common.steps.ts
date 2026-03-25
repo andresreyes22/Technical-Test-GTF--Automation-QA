@@ -1,6 +1,7 @@
 import { Given, Then, When } from "@cucumber/cucumber";
+import type { DataTable } from "@cucumber/cucumber";
 import assert from "node:assert";
-import { CustomWorld } from "../types/customWorld";
+import type { CustomWorld } from "../types/customWorld";
 
 Given("que ingreso al login de SauceDemo", async function (this: CustomWorld): Promise<void> {
   await this.loginPage.visit();
@@ -33,12 +34,18 @@ When(
   "agrego el producto {string} al carrito",
   async function (this: CustomWorld, productName: string): Promise<void> {
     await this.inventoryPage.addProductToCartByName(productName);
+    this.lastAddedProductName = productName;
   }
 );
 
 Then("el carrito debe mostrar {int} producto", async function (this: CustomWorld, count: number): Promise<void> {
   const currentCount = await this.inventoryPage.getCartBadgeCount();
   assert.strictEqual(currentCount, count);
+});
+
+Then("el carrito refleja el producto agregado", async function (this: CustomWorld): Promise<void> {
+  const currentCount = await this.inventoryPage.getCartBadgeCount();
+  assert.ok(currentCount > 0, "Se esperaba al menos 1 producto en el carrito");
 });
 
 When("abro el carrito", async function (this: CustomWorld): Promise<void> {
@@ -65,6 +72,23 @@ When(
     await this.checkoutOverviewPage.finishCheckout();
   }
 );
+
+When("completo el checkout con:", async function (this: CustomWorld, table: DataTable): Promise<void> {
+  const [row] = table.hashes() as Array<Record<string, string>>;
+  assert.ok(row, "La tabla de checkout debe tener una fila con datos");
+
+  const firstName = row.firstName;
+  const lastName = row.lastName;
+  const postalCode = row.postalCode;
+
+  assert.ok(firstName, "firstName es obligatorio");
+  assert.ok(lastName, "lastName es obligatorio");
+  assert.ok(postalCode, "postalCode es obligatorio");
+
+  await this.cartPage.continueToCheckout();
+  await this.checkoutPage.completeCustomerInformation(firstName, lastName, postalCode);
+  await this.checkoutOverviewPage.finishCheckout();
+});
 
 Then(
   "debo ver la confirmación {string}",
