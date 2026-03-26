@@ -12,15 +12,16 @@ WHERE s.nombre = 'Sucursal Norte'
 ORDER BY nombre_completo;
 
 -- Query 2:
--- Mostrar cuántos clientes distintos han visitado cada sucursal, ordenado descendente.
+-- Mostrar cuántos clientes distintos han visitado cada sucursal, ordenado por cantidad de visitas descendente.
 SELECT
-  s.id,
-  s.nombre,
-  COUNT(DISTINCT v.idCliente) AS clientes_distintos
+    s.id,
+    s.nombre,
+    COUNT(DISTINCT v.idCliente) AS clientes_distintos,
+    COUNT(v.idCliente)          AS total_visitas
 FROM Sucursal s
-LEFT JOIN Visitan v ON v.idSucursal = s.id
+         LEFT JOIN Visitan v ON v.idSucursal = s.id
 GROUP BY s.id, s.nombre
-ORDER BY clientes_distintos DESC, s.nombre ASC;
+ORDER BY total_visitas DESC, s.nombre ASC;
 
 -- Query 3:
 -- Productos disponibles en Medellín pero NO en Bogotá.
